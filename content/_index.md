@@ -25,15 +25,13 @@ Our spacious 2.5-acre grounds include:\
 
 At Blessington Educate Together, collaboration is at our core. The Board of Management, staff, parents, and students work together to create a nurturing and progressive educational environment.
 
-<!-- ![Birds-eye view of school](/uploads/2025/08/Birds-eye-view-edited-scaled.jpg) -->
 <figure class="strike-image">
 <img alt="Birds-eye view of school" src="/uploads/2025/08/Birds-eye-view-edited-scaled.jpg">
 </figure>
 
 ### **An Inclusive & Engaging Learning Experience**
 
-<!-- ![Butterfly](/uploads/2025/08/Educate-Together-Butterfly.png) -->
-<figure class="wp-block-image size-full is-resized">[<img alt="" class="wp-image-4072" height="330" src="/uploads/2025/08/Educate-Together-Butterfly.png" style="width:535px;height:auto" width="464">](/uploads/2025/08/Educate-Together-Butterfly.png)</figure>
+<figure class="wp-block-image size-full is-resized"><img alt="" class="wp-image-4072" height="330" src="/uploads/2025/08/Educate-Together-Butterfly.png" style="width:535px;height:auto" width="464"></figure>
 
 Through our Learn Together Ethical Education Programme, pupils explore diverse belief systems, cultures, and values, promoting mutual respect and understanding. Our monthly whole-school assemblies celebrate individual achievements, special events, and student contributions.
 

@@ -7,14 +7,6 @@ weight = 1
 aliases = ["/wp/us/staff/"]
 +++
 
-<!-- ![BETNS Classes Banner](/uploads/2025/08/betnsclassbanner-scaled.webp)
-
-- ![Oak Icon](/uploads/2025/08/oak.webp)Dave is our Infant Teacher (The Oak Room).
-- ![Elm Icon](/uploads/2025/08/elm.webp)Aifric is our First and Second Class Teacher (The Elm Room). Lynn is also the Deputy Principal.
-- ![Willow Icon](/uploads/2025/08/willow.webp)Fiona is our Third and Fourth Class Teacher (The Willow Room).
-- ![Ash Icon](/uploads/2025/08/ash.webp)Claire is our Fifth and Sixth Class Teacher (The Ash Room).
-- ![Hazel Icon](/uploads/2025/08/hazel.webp)Ciara is our Autism Class Teacher in the Hazel Room.
-- ![Birch Icon](/uploads/2025/08/birch.webp)Nombulelo is our Autism Class Teacher in the Birch Room. -->
 <img alt="BETNS Classes Banner" src="/uploads/2025/08/betnsclassbanner-scaled.webp">
 
 - <img alt="Oak Icon" src="/uploads/2025/08/oak.webp">Dave is our Infant Teacher (The Oak Room).

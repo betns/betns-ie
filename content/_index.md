@@ -7,7 +7,7 @@ weight = 0
 aliases = ["/wp/"]
 +++
 
-**Please note that applications close today, January 7 2026.for Junior Infants September 2026. Click [here](/school-policies/)to apply.**
+**Please note that applications close today, January 7 2026.for Junior Infants September 2026. Click [here](/school-policies/) to apply.**
 
 ## **Welcome to Blessington Educate Together National School**
 
@@ -17,10 +17,10 @@ Located 2km from Blessington Town, our school sits in a scenic area near Blessin
 
 ### **A School Designed for Growth & Well-being**
 
-Our spacious 2.5-acre grounds include:
-✔ Expansive green areas for outdoor learning & play
-✔ Dedicated sensory spaces for student well-being
-✔ Active play zones
+Our spacious 2.5-acre grounds include:\
+✔ Expansive green areas for outdoor learning & play\
+✔ Dedicated sensory spaces for student well-being\
+✔ Active play zones\
 ✔ A thriving school garden to encourage sustainability & hands-on learning
 
 At Blessington Educate Together, collaboration is at our core. The Board of Management, staff, parents, and students work together to create a nurturing and progressive educational environment.

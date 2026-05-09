@@ -1,0 +1,80 @@
+baseURL = "https://example.com/"
+languageCode = "en-ie"
+title = "Blessington Educate Together National School"
+
+[params]
+  description = "Blessington Educate Together National School — a multi-denominational primary school in Wicklow."
+  schoolName = "Blessington Educate Together National School"
+  phone = "045 865 281"
+  phoneTel = "045865281"
+  email = "office@betns.ie"
+  address = "Red Lane, Blessington, Wicklow, W91 DK23"
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[[menu.main]]
+  identifier = "welcome"
+  name = "Welcome"
+  url = "/"
+  weight = 10
+
+[[menu.main]]
+  identifier = "about-us"
+  name = "About Us"
+  url = "/us/"
+  weight = 20
+
+[[menu.main]]
+  parent = "about-us"
+  name = "Meet Our Staff"
+  url = "/us/staff/"
+  weight = 21
+
+[[menu.main]]
+  parent = "about-us"
+  name = "Ethos and Curriculum"
+  url = "/us/ethos-and-curriculum/"
+  weight = 22
+
+[[menu.main]]
+  parent = "about-us"
+  name = "History of BETNS"
+  url = "/us/history-blessington-educate-together-national-school/"
+  weight = 23
+
+[[menu.main]]
+  parent = "about-us"
+  name = "Board of Management"
+  url = "/us/our-board/"
+  weight = 24
+
+[[menu.main]]
+  identifier = "enrolment"
+  name = "Enrolment"
+  url = "/school-policies/"
+  weight = 30
+
+[[menu.main]]
+  identifier = "policies"
+  name = "Policies"
+  url = "/policies-2/"
+  weight = 40
+
+[[menu.main]]
+  identifier = "child-safeguarding"
+  name = "Child Safeguarding"
+  url = "/child-protection/"
+  weight = 50
+
+[[menu.main]]
+  identifier = "school-calendar"
+  name = "School Calendar"
+  url = "/school-calendar/"
+  weight = 60
+
+[[menu.main]]
+  identifier = "contact-us"
+  name = "Contact Us"
+  url = "/contact-us/"
+  weight = 70

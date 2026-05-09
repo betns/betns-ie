@@ -1,0 +1,13 @@
+{{ define "main" }}
+<section class="mx-auto" style="max-width: 960px;">
+  <header class="mb-4">
+    <h1>{{ .Title }}</h1>
+  </header>
+  {{ with .Params.featured_image }}
+    <img class="featured-image" src="{{ . | relURL }}" alt="">
+  {{ end }}
+  <div class="content">
+    {{ .Content }}
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,35 @@
+<header class="site-header border-bottom">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container">
+      <a class="navbar-brand" href="{{ "/" | relURL }}">{{ site.Title }}</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
+              aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="main-nav">
+        <ul class="navbar-nav ms-auto">
+          {{ range site.Menus.main }}
+            {{ if .HasChildren }}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle{{ if $.IsMenuCurrent "main" . }} active{{ end }}"
+                   href="{{ .URL | relURL }}" id="nav-{{ .Identifier }}" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">{{ .Name }}</a>
+                <ul class="dropdown-menu" aria-labelledby="nav-{{ .Identifier }}">
+                  {{ range .Children }}
+                    <li><a class="dropdown-item{{ if $.IsMenuCurrent "main" . }} active{{ end }}"
+                           href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+                  {{ end }}
+                </ul>
+              </li>
+            {{ else }}
+              <li class="nav-item">
+                <a class="nav-link{{ if $.IsMenuCurrent "main" . }} active{{ end }}"
+                   href="{{ .URL | relURL }}">{{ .Name }}</a>
+              </li>
+            {{ end }}
+          {{ end }}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

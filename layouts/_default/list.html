@@ -1,0 +1,25 @@
+{{ define "main" }}
+<section class="mx-auto" style="max-width: 960px;">
+  <header class="mb-4">
+    <h1>{{ .Title }}</h1>
+  </header>
+  {{ with .Content }}
+    <div class="content mb-4">{{ . }}</div>
+  {{ end }}
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    {{ range .Pages.ByWeight }}
+      <div class="col">
+        <div class="card h-100">
+          {{ with .Params.featured_image }}
+            <img class="card-img-top" src="{{ . | relURL }}" alt="" style="object-fit: cover; height: 180px;">
+          {{ end }}
+          <div class="card-body">
+            <h2 class="h5 card-title"><a href="{{ .RelPermalink }}" class="stretched-link text-decoration-none">{{ .Title }}</a></h2>
+            {{ with .Summary }}<p class="card-text small text-muted">{{ . | plainify | truncate 160 }}</p>{{ end }}
+          </div>
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

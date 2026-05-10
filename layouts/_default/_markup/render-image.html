@@ -10,19 +10,16 @@
       ![alt](src#thumb)         left-floated 220px thumb that text wraps around
       ![alt](src#center)        block-centered with optional caption (Title)
 
-  The token is stripped from the rendered ``src``; ``alt`` is escaped, and
-  the title (if present) becomes a ``<figcaption>`` for ``#center``.
+  Path rewriting (e.g. ``/uploads/foo.jpg`` → ``/betns-ie/uploads/foo.jpg``)
+  is handled site-wide by ``canonifyURLs = true`` in ``hugo.toml``; this hook
+  deliberately leaves the URL untouched so the two don't fight.
 */ -}}
 {{- $dest := .Destination -}}
-{{- $bp := strings.TrimSuffix "/" site.BaseURL.Path -}}
 {{- $variant := "" -}}
 {{- if strings.Contains $dest "#" -}}
   {{- $parts := split $dest "#" -}}
   {{- $dest = index $parts 0 -}}
   {{- $variant = lower (index $parts 1) -}}
-{{- end -}}
-{{- if and (strings.HasPrefix $dest "/") (not (strings.HasPrefix $dest "//")) -}}
-  {{- $dest = printf "%s%s" $bp $dest -}}
 {{- end -}}
 {{- $alt := .PlainText -}}
 {{- $title := .Title -}}

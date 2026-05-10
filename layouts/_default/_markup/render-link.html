@@ -1,7 +1,8 @@
+{{- /*
+  Link render hook. Path rewriting for internal links is handled site-wide
+  by ``canonifyURLs = true`` in ``hugo.toml``; we just classify the link so
+  external destinations open in a new tab with ``rel="noopener"``.
+*/ -}}
 {{- $dest := .Destination -}}
 {{- $external := or (strings.HasPrefix $dest "http://") (strings.HasPrefix $dest "https://") (strings.HasPrefix $dest "//") -}}
-{{- $special := or (strings.HasPrefix $dest "mailto:") (strings.HasPrefix $dest "tel:") (strings.HasPrefix $dest "#") -}}
-{{- if not (or $external $special) -}}
-  {{- $dest = $dest | relURL -}}
-{{- end -}}
 <a href="{{ $dest | safeURL }}"{{ with .Title }} title="{{ . | safeHTML }}"{{ end }}{{ if $external }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>

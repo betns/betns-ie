@@ -7,14 +7,16 @@ weight = 1
 aliases = ["/wp/us/staff/"]
 +++
 
+<figure class="strike-image">
 <img alt="BETNS Classes Banner" src="/uploads/2025/08/betnsclassbanner-scaled.webp">
+</figure>
 
-- <img alt="Oak Icon" src="/uploads/2025/08/oak.webp">Dave is our Infant Teacher (The Oak Room).
-- <img alt="Elm Icon" src="/uploads/2025/08/elm.webp">Aifric is our First and Second Class Teacher (The Elm Room). Lynn is also the Deputy Principal.
-- <img alt="Willow Icon" src="/uploads/2025/08/willow.webp">Fiona is our Third and Fourth Class Teacher (The Willow Room).
-- <img alt="Ash Icon" src="/uploads/2025/08/ash.webp">Claire is our Fifth and Sixth Class Teacher (The Ash Room).
-- <img alt="Hazel Icon" src="/uploads/2025/08/hazel.webp">Ciara is our Autism Class Teacher in the Hazel Room.
-- <img alt="Birch Icon" src="/uploads/2025/08/birch.webp">Nombulelo is our Autism Class Teacher in the Birch Room.
-- Miriam Kelly, Glynis Cains, Niamh Direen, Lydia Conlon, Sheila Cooney, Jennifer O’Connor and Aoife Crowe are our Special Needs Assistants.
-- Pauline Merrins is our School Administrator.
-- Anita Collings is our Principal.
+<img alt="Oak Icon" src="/uploads/2025/08/oak.webp">Dave is our Infant Teacher (The Oak Room).\
+<img alt="Elm Icon" src="/uploads/2025/08/elm.webp">Aifric is our First and Second Class Teacher (The Elm Room). Lynn is also the Deputy Principal.\
+<img alt="Willow Icon" src="/uploads/2025/08/willow.webp">Fiona is our Third and Fourth Class Teacher (The Willow Room).\
+<img alt="Ash Icon" src="/uploads/2025/08/ash.webp">Claire is our Fifth and Sixth Class Teacher (The Ash Room).\
+<img alt="Hazel Icon" src="/uploads/2025/08/hazel.webp">Ciara is our Autism Class Teacher in the Hazel Room.\
+<img alt="Birch Icon" src="/uploads/2025/08/birch.webp">Nombulelo is our Autism Class Teacher in the Birch Room.\
+Miriam Kelly, Glynis Cains, Niamh Direen, Lydia Conlon, Sheila Cooney, Jennifer O’Connor and Aoife Crowe are our Special Needs Assistants.\
+Pauline Merrins is our School Administrator.\
+Anita Collings is our Principal.

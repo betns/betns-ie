@@ -44,6 +44,6 @@ We also encourage active participation through:\
 
 At Blessington Educate Together National School, we believe in education beyond the classroom, nurturing critical thinking, inclusivity, and lifelong learning.
 
-[Pre-enroll](/school-policies/) today and experience a school where every child is valued, respected, and empowered.
+[Pre-enrol](/school-policies/) today and experience a school where every child is valued, respected, and empowered.
 
 [Contact us](/contact-us/) to learn more about our admissions process and be part of our vibrant school community!

@@ -7,7 +7,7 @@ weight = 0
 aliases = ["/wp/"]
 +++
 
-**Please note that applications close today, January 7 2026.for Junior Infants September 2026. Click [here](/school-policies/) to apply.**
+**Please note that applications close today, January 7 2026.for Junior Infants September 2026. Click [here](/school-policies/)to apply.**
 
 ## **Welcome to Blessington Educate Together National School**
 
@@ -25,13 +25,11 @@ Our spacious 2.5-acre grounds include:\
 
 At Blessington Educate Together, collaboration is at our core. The Board of Management, staff, parents, and students work together to create a nurturing and progressive educational environment.
 
-<figure class="strike-image">
-<img alt="Birds-eye view of school" src="/uploads/2025/08/Birds-eye-view-edited-scaled.jpg">
-</figure>
+![Birds-eye view of school](/uploads/2025/08/Birds-eye-view-edited-scaled.jpg#strike)
 
 ### **An Inclusive & Engaging Learning Experience**
 
-<figure class="wp-block-image size-full is-resized"><img alt="" class="wp-image-4072" height="330" src="/uploads/2025/08/Educate-Together-Butterfly.png" style="width:535px;height:auto" width="464"></figure>
+[<img alt="" class="wp-image-4072" height="330" src="/uploads/2025/08/Educate-Together-Butterfly.png" style="width:535px;height:auto" width="464">](/uploads/2025/08/Educate-Together-Butterfly.png)
 
 Through our Learn Together Ethical Education Programme, pupils explore diverse belief systems, cultures, and values, promoting mutual respect and understanding. Our monthly whole-school assemblies celebrate individual achievements, special events, and student contributions.
 
@@ -47,3 +45,7 @@ At Blessington Educate Together National School, we believe in education beyond 
 [Pre-enrol](/school-policies/) today and experience a school where every child is valued, respected, and empowered.
 
 [Contact us](/contact-us/) to learn more about our admissions process and be part of our vibrant school community!
+
+<!-- TODO add to YouTube
+<video controls="" playsinline="" preload="metadata" style="max-width:100%;"><source src="/uploads/videos/virtual-open-day.mov" type="video/quicktime"/></video> 
+-->

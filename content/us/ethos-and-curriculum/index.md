@@ -7,7 +7,7 @@ weight = 0
 aliases = ["/wp/us/ethos-and-curriculum/"]
 +++
 
-##
+## [<img alt="" class="wp-image-2801 aligncenter" height="268" src="/uploads/2020/02/1-scaled.jpg" width="358">](/uploads/2020/02/1-scaled.jpg)
 
 ## Ethos
 

@@ -1,7 +1,11 @@
-<header class="site-header border-bottom">
-  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+<header class="site-header">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-      <a class="navbar-brand" href="{{ "/" | relURL }}">{{ site.Title }}</a>
+      <a class="navbar-brand" href="{{ "/" | relURL }}">
+        <img src="{{ "/uploads/2025/02/cropped-BETNS-75.jpg" | relURL }}" alt="" aria-hidden="true">
+        <span class="d-none d-md-inline">{{ site.Title }}</span>
+        <span class="d-inline d-md-none">BETNS</span>
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
               aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -12,19 +16,19 @@
             {{ if .HasChildren }}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle{{ if $.IsMenuCurrent "main" . }} active{{ end }}"
-                   href="{{ .URL | relURL }}" id="nav-{{ .Identifier }}" role="button"
-                   data-bs-toggle="dropdown" aria-expanded="false">{{ .Name }}</a>
+                    href="{{ .URL | relURL }}" id="nav-{{ .Identifier }}" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">{{ .Name }}</a>
                 <ul class="dropdown-menu" aria-labelledby="nav-{{ .Identifier }}">
                   {{ range .Children }}
                     <li><a class="dropdown-item{{ if $.IsMenuCurrent "main" . }} active{{ end }}"
-                           href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+                            href="{{ .URL | relURL }}">{{ .Name }}</a></li>
                   {{ end }}
                 </ul>
               </li>
             {{ else }}
               <li class="nav-item">
                 <a class="nav-link{{ if $.IsMenuCurrent "main" . }} active{{ end }}"
-                   href="{{ .URL | relURL }}">{{ .Name }}</a>
+                    href="{{ .URL | relURL }}">{{ .Name }}</a>
               </li>
             {{ end }}
           {{ end }}

@@ -1,604 +1,3 @@
-
-Claude finished the response
-You said: I want my hugo site generator to list all files from a given nested directory
-I want my hugo site generator to list all files from a given nested directory
-
-{{ range resources.Match "static/uploads/2025/*/*Policy*" }}
-  <img src="{{ .RelPermalink }}">
-{{ end }}
-This should include all files with "policy" in the name for subdirectories 2025/11 and 2025/08 is that right?
-
-8:18 PM
-Claude responded: Almost, but there are a couple of issues with that pattern.
-
-Evaluated Hugo glob pattern matching behavior for nested directories
-Evaluated Hugo glob pattern matching behavior for nested directories
-Almost, but there are a couple of issues with that pattern.
-
-Problem 1: resources.Match uses the assets/ directory, not static/
-
-resources.Match operates on Hugo's asset pipeline (the assets/ folder). Files in static/ are served as-is and aren't accessible via resources. You'd need to either move your uploads to assets/static/uploads/... or use a different approach.
-
-Problem 2: The glob * doesn't cross directory boundaries
-
-Your pattern 2025/*/*Policy* uses two * wildcards for the subdirectories, which means it matches exactly one level at each *. So 2025/11/somePolicy.pdf ✅ and 2025/08/somePolicy.pdf ✅ would match — that part is correct for two-level nesting.
-
-However, * is case-sensitive, so *Policy* would miss files named policy (lowercase). Use *[Pp]olicy* or just *olicy* if you want both cases... or better yet, Hugo's resources.Match supports ** for recursive matching.
-
-Problem 3: Images only?
-
-Your template uses <img src="..."> but *Policy* files are probably PDFs or docs, not images. That won't render correctly.
-
-Recommended fix, assuming you move files to assets/:
-
-go
-{{ range resources.Match "static/uploads/2025/**/*olicy*" }}
-  <a href="{{ .RelPermalink }}">{{ .Name }}</a>
-{{ end }}
-The ** will recursively match any subdirectory depth under 2025/, so 2025/08/, 2025/11/, and any future subdirectory all get picked up automatically. The lowercase *olicy* catches both Policy and policy.
-
-If you truly need to keep files in static/ (e.g. they're large binaries you don't want processed), you'd need to hardcode the paths or use a data file to list them, since Hugo has no glob-listing API for the static/ directory.
-
-You said: What is the implication of moving these resources to assets?
-What is the implication of moving these resources to assets? Should I only move assets I wish to scan or render recursively rather than static that is linked explicitly?
-
-8:20 PM
-Claude responded: Good question — the distinction matters a lot in Hugo's architecture.
-
-Examined Hugo's architectural implications for resource organization
-Examined Hugo's architectural implications for resource organization
-Good question — the distinction matters a lot in Hugo's architecture.
-
-The core difference
-
-static/ is a pass-through directory. Hugo copies everything in it verbatim to the output with no processing, no fingerprinting, no awareness of whether files are actually used. They're always published.
-
-assets/ is a processing pipeline. Files only get published if your templates explicitly reference them via resources.Get, resources.Match, etc. Hugo can also transform them — fingerprint for cache-busting, minify, resize images, bundle CSS/JS, etc.
-
-Implications of moving to assets/
-
-Files are only published if referenced in a template. A file sitting in assets/ with no template touching it won't appear in your output at all — which could silently break direct links.
-You get fingerprinted URLs by default (e.g. /uploads/doc.ab3f9c.pdf), which breaks stable permalinks unless you explicitly call .RelPermalink without fingerprinting.
-Hugo has to process the assets directory on every build, so a large uploads folder (hundreds of files) can noticeably slow builds.
-Images run through Hugo's image pipeline, which is powerful but adds overhead you may not want for arbitrary uploads.
-Your intuition is right
-
-The practical rule of thumb is:
-
-static/ — files linked explicitly and stably in content or templates (PDFs, downloads, a logo, a favicon). You control the URL and Hugo stays out of the way.
-assets/ — files you want Hugo to discover, transform, or fingerprint programmatically (images to resize, CSS/JS to bundle, or exactly your use case of glob-scanning a directory).
-So rather than moving all your uploads, the cleaner approach is to move only the subset you want to scan — your uploads/2025/ policy documents — into assets/, and leave everything else in static/. This keeps build times reasonable and avoids accidentally breaking explicit links elsewhere on the site.
-
-You said: I moved several files into the assets/policies/**/* directory but the following code pasted into the /policies/_index.
-I moved several files into the assets/policies/**/* directory but the following code pasted into the /policies/_index.html is not converted from template to html:
-
-+++
-title = "Policies"
-slug = "policies-2"
-date = "2017-10-01T12:32:30+00:00"
-lastmod = "2025-11-26T20:56:58+00:00"
-weight = 0
-aliases = ["/wp/policies-2/"]
-+++
-
-These policies are in place in Blessington Educate Together National School, please read them carefully.
-
-If you have any questions about them feel free to [contact us.](/contact-us/ "Contact Us")
-
-{{ range resources.Match "policies/**/*" }}
-  <a href="{{ .RelPermalink }}">{{ .Name }}</a>
-{{ end }}
-Show less
-8:30 PM
-Claude responded: The problem is that content files (.
-
-Identified template syntax misplaced in content file
-Identified template syntax misplaced in content file
-The problem is that content files (.md) are not processed as Go templates — Hugo only runs template directives in layout files under layouts/. The {{ range }} in your _index.md is being treated as literal text and either rendered as-is or stripped.
-
-You have two main options:
-
-Option 1: Use a custom layout (recommended)
-
-Create a layout file that matches your policies page, e.g. layouts/policies/list.html or layouts/_default/policies.html, and put the template logic there:
-
-html
-{{ define "main" }}
-  <p>{{ .Content }}</p>
-  {{ range resources.Match "policies/**/*" }}
-    <a href="{{ .RelPermalink }}">{{ .Name }}</a><br>
-  {{ end }}
-{{ end }}
-Your _index.md stays clean with just front matter and prose — Hugo will render .Content (the markdown body) and then your range loop lists the files.
-
-Option 2: Use a shortcode
-
-Create layouts/shortcodes/policy-list.html:
-
-html
-{{ range resources.Match "policies/**/*" }}
-  <a href="{{ .RelPermalink }}">{{ .Name }}</a><br>
-{{ end }}
-Then call it from your content file:
-
-markdown
-These policies are in place...
-
-{{< policy-list >}}
-This is useful if you want the file listing to be embeddable in any content page, not just this one.
-
-Which to choose
-
-If this is the only page that will ever list policy files, go with Option 1 — it's simpler and keeps the logic in one layout file.
-If you might want to embed a file listing in multiple pages or posts, go with Option 2 — shortcodes are reusable anywhere in content.
-The key takeaway is that {{ }} template syntax belongs in layouts/, never in content/.
-
-You said: the html content is in /content/policies-2/index.
-the html content is in /content/policies-2/index.md 
-
-https://betns.github.io/betns-ie/policies-2/
-
-8:34 PM
-Claude responded: That confirms it — the template code is being rendered literally on the page.
-
-Identified template rendering issue and devised layout solution
-Identified template rendering issue and devised layout solution
-That confirms it — the template code is being rendered literally on the page. You can see the raw {{ range resources.Match "policies/**/*" }} text in the output.
-
-The fix is what was described before, but now with your exact paths in mind. Since your file is content/policies-2/index.md, the matching layout file would be layouts/policies-2/single.html (leaf bundles use single, not list).
-
-Step 1 — Create layouts/policies-2/single.html:
-
-html
-{{ define "main" }}
-  {{ .Content }}
-  {{ range resources.Match "policies/**/*" }}
-    <a href="{{ .RelPermalink }}">{{ .Name }}</a><br>
-  {{ end }}
-{{ end }}
-Step 2 — Strip the template code out of your content/policies-2/index.md, leaving just the front matter and prose:
-
-markdown
-+++
-title = "Policies"
-slug = "policies-2"
-date = "2017-10-01T12:32:30+00:00"
-lastmod = "2025-11-26T20:56:58+00:00"
-weight = 0
-aliases = ["/wp/policies-2/"]
-+++
-
-These policies are in place in Blessington Educate Together National School, please read them carefully.
-
-If you have any questions about them feel free to [contact us.](/contact-us/ "Contact Us")
-One thing to check — look at what your other page layouts (layouts/_default/single.html or your theme's equivalent) use as the wrapping define block name. If your theme uses {{ define "content" }} or {{ define "body" }} instead of {{ define "main" }}, use that name instead, otherwise the page will render blank.
-
-You said: Can you check the repo https://github.
-Can you check the repo [https://github.com/betns/betns-ie](https://github.dev/betns/betns-ie) to see if you can discover what is wrong?
-
-9:12 PM
-Claude responded: I'm hitting permission restrictions fetching GitHub directly.
-
-Thinking about identifying bugs and issues in a GitHub repository codebase
-Thinking about identifying bugs and issues in a GitHub repository codebase
-I'm hitting permission restrictions fetching GitHub directly. Let me try the raw content endpoint for key files:
-
-
-Pivoted to direct GitHub URL retrieval for repository investigation
-Pivoted to direct GitHub URL retrieval for repository investigation
-The search didn't help. Let me try fetching the key files directly from raw GitHub:
-
-
-Identified security limitations preventing direct repository access
-Identified security limitations preventing direct repository access
-Unfortunately I can't access GitHub or raw.githubusercontent.com directly due to network restrictions in this environment. I can only fetch URLs that appear in search results or that you directly provide and I've already fetched.
-
-The most useful files to inspect would be:
-
-layouts/_default/single.html — to see what define block name your theme uses (main, content, body, etc.)
-layouts/_default/baseof.html — the base template that shows how blocks are composed
-config.toml or hugo.toml — to check if a theme is declared, since theme layouts take precedence
-Could you paste the contents of those files here? You can find them either in your repo or by running:
-
-bash
-find layouts/ themes/ -name "*.html" | head -20
-That'll show what layout files actually exist, which will tell us exactly what layout name to create and what define block to use.
-
-You said: baseURL = "https://example.
-
-<!doctype html> <html lang="{{ si
-
-pasted
-
-{{ define "main" }}
-<article class="mx-auto" style="max-width: 820px;">
-  <header class="mb-4">
-    <h1>{{ .Title }}</h1>
-    {{ with .Params.featured_image }}
-      <img class="featured-image" src="{{ . | relURL }}" alt="">
-    {{ end }}
-  </header>
-  <div class="content">
-    {{ .Content }}
-  </div>
-</article>
-{{ end }}
-baseURL = "https://example.com/"
-canonifyURLs = true
-languageCode = "en-ie"
-title = "Blessington Educate Together National School"
-
-[params]
-  description = "Blessington Educate Together National School — a multi-denominational primary school in Wicklow."
-  schoolName = "Blessington Educate Together National School"
-  phone = "045 865 281"
-  phoneTel = "045865281"
-  email = "office@betns.ie"
-  address = "Red Lane, Blessington, Wicklow, W91 DK23"
-
-[markup.goldmark.renderer]
-  unsafe = true
-
-[[menu.main]]
-  identifier = "welcome"
-  name = "Welcome"
-  url = "/"
-  weight = 10
-
-[[menu.main]]
-  identifier = "about-us"
-  name = "About Us"
-  url = "/us/"
-  weight = 20
-
-[[menu.main]]
-  parent = "about-us"
-  name = "Meet Our Staff"
-  url = "/us/staff/"
-  weight = 21
-
-[[menu.main]]
-  parent = "about-us"
-  name = "Ethos and Curriculum"
-  url = "/us/ethos-and-curriculum/"
-  weight = 22
-
-[[menu.main]]
-  parent = "about-us"
-  name = "History of BETNS"
-  url = "/us/history-blessington-educate-together-national-school/"
-  weight = 23
-
-[[menu.main]]
-  parent = "about-us"
-  name = "Board of Management"
-  url = "/us/our-board/"
-  weight = 24
-
-[[menu.main]]
-  identifier = "enrolment"
-  name = "Enrolment"
-  url = "/school-policies/"
-  weight = 30
-
-[[menu.main]]
-  identifier = "policies"
-  name = "Policies"
-  url = "/policies-2/"
-  weight = 40
-
-[[menu.main]]
-  identifier = "child-safeguarding"
-  name = "Child Safeguarding"
-  url = "/child-protection/"
-  weight = 50
-
-[[menu.main]]
-  identifier = "school-calendar"
-  name = "School Calendar"
-  url = "/school-calendar/"
-  weight = 60
-
-[[menu.main]]
-  identifier = "contact-us"
-  name = "Contact Us"
-  url = "/contact-us/"
-  weight = 70
-
-Show more
-9:15 PM
-Claude responded: Now I have everything I need.
-
-Diagnosed layout resolution issue and prescribed custom template solution
-Diagnosed layout resolution issue and prescribed custom template solution
-Now I have everything I need. The setup is clear:
-
-baseof.html uses {{ block "main" . }}{{ end }} ✅
-_default/single.html uses {{ define "main" }} and just renders {{ .Content }} — which is why the template code appears as literal text
-There's no theme, just your own layouts/
-The fix is to create one new file: layouts/policies-2/single.html
-
-Hugo will automatically prefer this over _default/single.html for the policies-2 section. Create it with:
-
-html
-{{ define "main" }}
-<article class="mx-auto" style="max-width: 820px;">
-  <header class="mb-4">
-    <h1>{{ .Title }}</h1>
-  </header>
-  <div class="content">
-    {{ .Content }}
-    <ul>
-      {{ range resources.Match "policies/**/*" }}
-        <li><a href="{{ .RelPermalink }}">{{ .Name }}</a></li>
-      {{ end }}
-    </ul>
-  </div>
-</article>
-{{ end }}
-Then clean up content/policies-2/index.md by removing the {{ range }} block — it should only contain front matter and prose.
-
-Also double-check your assets/ folder structure. Hugo's resources.Match path is relative to the assets/ directory root, so your files need to be at:
-
-assets/policies/2025/08/some-policy.pdf
-assets/policies/2025/11/some-policy.pdf
-Not assets/static/policies/ or any other nesting. If you run hugo locally you can confirm with hugo list all or just check the build output for the files appearing under /policies/.
-
-You said: my layouts/policies-2/single.
-my layouts/policies-2/single.html file previously looked like this:
-
-{{ define "main" }}
-  <p>{{ .Content }}</p>
-  {{ range resources.Match "policies/**/*" }}
-    <a href="{{ .RelPermalink }}">{{ .Name }}</a><br>
-  {{ end }}
-{{ end }}
-Is this not correct?
-
-9:17 PM
-Claude responded: Yes, the layout is correct!
-
-Diagnosed template rendering issue between layout and content files
-Diagnosed template rendering issue between layout and content files
-Yes, the layout is correct! The problem is actually two separate things happening at once:
-
-The literal template text you see on the live page is coming from .Content — meaning your content/policies-2/index.md still contains the {{ range }} block. Hugo renders that markdown as-is into .Content, and your layout then outputs it via {{ .Content }}. The layout's own {{ range }} is separate and may well be working, but returning zero results.
-
-So you have two things to fix:
-
-1. Remove the template code from index.md — it should end at the prose:
-
-markdown
-+++
-title = "Policies"
-...
-+++
-
-These policies are in place in Blessington Educate Together National School, please read them carefully.
-
-If you have any questions about them feel free to [contact us.](/contact-us/ "Contact Us")
-2. Verify your assets/ folder structure — run this from your repo root:
-
-bash
-find assets/ -type f
-The output should show paths like assets/policies/2025/08/filename.pdf. If the files are nested differently (e.g. assets/static/policies/ or assets/uploads/policies/) then resources.Match "policies/**/*" won't find them and the list will silently render nothing.
-
-Once the content file is cleaned and the asset paths confirmed, the layout you had is exactly right.
-
-You said: I cleaned up the content/policies-2/index.
-I cleaned up the content/policies-2/index.md that's done.
-
-When I regenerated using the block I pasted above it did not work.
-
-How is the block above different from the one you suggested:
-
-{{ define "main" }}
-<article class="mx-auto" style="max-width: 820px;">
-  <header class="mb-4">
-    <h1>{{ .Title }}</h1>
-  </header>
-  <div class="content">
-    {{ .Content }}
-    <ul>
-      {{ range resources.Match "policies/**/*" }}
-        <li><a href="{{ .RelPermalink }}">{{ .Name }}</a></li>
-      {{ end }}
-    </ul>
-  </div>
-</article>
-{{ end }}
-
-Show more
-9:20 PM
-Claude responded: Functionally they are identical for the purposes of the file listing.
-
-Pinpointed asset folder structure mismatch as root cause
-Pinpointed asset folder structure mismatch as root cause
-Functionally they are identical for the purposes of the file listing. The only differences are presentational — <article> wrapper, <h1> title, <ul><li> vs bare <a><br> — none of which would affect whether resources.Match finds files.
-
-So the layout is not the problem. The issue is almost certainly that resources.Match "policies/**/*" is finding zero files, which causes the range to silently produce nothing.
-
-The most likely causes:
-
-1. Files aren't in assets/ at all — run this and share the output:
-
-bash
-find assets/ -type f
-2. The path inside assets/ doesn't start with policies/ — for example if your files are at assets/uploads/policies/... the pattern needs to be "uploads/policies/**/*" not "policies/**/*"
-
-3. The files haven't been committed and pushed — resources.Match on GitHub Pages only sees what's actually in the deployed repo. Check that the PDFs appear in your GitHub repo under assets/.
-
-The fastest way to debug is to temporarily broaden the pattern to match everything and see if anything comes back:
-
-html
-{{ range resources.Match "**/*" }}
-  <li>{{ .Name }} — {{ .RelPermalink }}</li>
-{{ end }}
-If that lists files, you can narrow the path until it matches. If it lists nothing, the files simply aren't in assets/ in the repo.
-
-You said: Here is the content of the contact-us page:
-Here is the content of the contact-us page: 
-
-+++
-title = "Contact Us"
-slug = "contact-us"
-date = "2013-11-07T15:10:18+00:00"
-lastmod = "2025-09-08T09:19:20+00:00"
-weight = 0
-aliases = ["/wp/contact-us/"]
-+++
-
-*Our enrolment form can be found [here](/school-policies/).*
-
-*We would be delighted to answer your queries by email or phone, but please know that you are very welcome to pop into us if you’d prefer!*
-
-<figure class="wp-block-table is-style-stripes">
-
-|  |  |
-| --- | --- |
-| **Office Phone Number:** | [045 865 281](tel:045865281) |
-| **Postal Address:** | Red Lane, Blessington, Wicklow, W91 DK23 |
-| **Email:** | [office@betns.ie](mailto:office@betns.ie) |
-| **Board of Management:** | [bom@betns.ie](mailto:bom@betns.ie) |
-
-</figure>
-
-##
-
-<iframe
-  src="https://maps.google.com/maps?q=Blessington+Educate+Together,+Blessington,+Ireland&z=14&output=embed"
-  width="425" height="350" style="border:0" loading="lazy"
-  referrerpolicy="no-referrer-when-downgrade"
-  title="Map: BETNS, Red Lane, Blessington">
-</iframe>
-
-##
-
-[Find us on Facebook](https://www.facebook.com/BlessingtonET)
-What is the purpose or impact of the two lines with ##
-
-Show more
-9:53 PM
-Claude responded: They're empty ## headings — an H2 with no text.
-
-Identified empty H2 headings functioning as visual spacers
-Identified empty H2 headings functioning as visual spacers
-They're empty ## headings — an H2 with no text. They render as a blank line with some vertical margin/padding from the heading's default CSS, effectively acting as spacers between the table, the iframe, and the Facebook link.
-
-It's a bit of a hack. The cleaner way to add spacing in this context would be plain CSS or an HTML <div style="margin: 1.5rem 0">, but empty headings work because browsers apply top/bottom margin to heading elements by default.
-
-They have no semantic meaning and would look odd to screen readers (an empty heading is announced as a heading with no content), so if you ever wanted to tidy it up you could replace them with:
-
-html
-<div class="my-4"></div>
-That uses Bootstrap's spacing utility (which you already have loaded) and has no semantic side effects.
-
-You said: Could I add the padding to the iframe instead?
-Could I add the padding to the iframe instead?
-
-9:54 PM
-Claude responded: Yes, that's the cleaner approach.
-Yes, that's the cleaner approach. Just add a class or inline style directly to the iframe:
-
-html
-<iframe
-  class="my-4"
-  src="https://maps.google.com/maps?q=Blessington+Educate+Together,+Blessington,+Ireland&z=14&output=embed"
-  width="425" height="350" style="border:0" loading="lazy"
-  referrerpolicy="no-referrer-when-downgrade"
-  title="Map: BETNS, Red Lane, Blessington">
-</iframe>
-my-4 adds Bootstrap margin to both the top and bottom, replacing both ## lines in one go. You can use mt-4 / mb-4 individually if you want different spacing on each side.
-
-You said: please tell me if there is a better way to organize these components, i put the betns-table next to other content but maybe it's better at the end of the styl…
-
-<!doctype html> <html lang="{{ site.LanguageCode | default " en" }}"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title> {{ with site.Para
-
-pasted
-
-please tell me if there is a better way to organize these components, i put the betns-table next  to other content but maybe it's better at the end of the style block?
-
-10:09 PM
-Claude responded: The current order is a bit mixed.
-
-Evaluated CSS component placement and organizational structure
-Evaluated CSS component placement and organizational structure
-The current order is a bit mixed. A conventional CSS organization would group styles by purpose, moving from general to specific:
-
-CSS custom properties / root variables
-Base / layout (body, main)
-Components (header, footer)
-Content area (.content rules)
-Utility / modifier classes (.img-* variants, .betns-table)
-Responsive overrides (all @media queries together at the end)
-Right now your @media blocks are scattered inline next to their components, and .betns-table is dropped in the middle of the image render-hook variants. A cleaner order would be:
-
-css
-/* 1. Variables */
-:root { ... }
-
-/* 2. Layout */
-body { ... }
-main { ... }
-
-/* 3. Header */
-.site-header { ... }
-
-/* 4. Footer */
-footer { ... }
-
-/* 5. Content area */
-.content img { ... }
-.content figure { ... }
-.content .wp-block-image { ... }
-.content .table { ... }
-.featured-image { ... }
-
-/* 6. Image render-hook variants */
-.img-banner { ... }
-.img-strike { ... }
-.img-icon { ... }
-.img-thumb { ... }
-.img-center { ... }
-
-/* 7. Tables */
-.betns-table { ... }
-
-/* 8. Responsive overrides */
-@media (max-width: 768px) { ... }
-@media (max-width: 767.98px) { ... }
-@media (max-width: 576px) { ... }
-That said, since this is all in baseof.html, once it grows further it's worth moving the CSS into a dedicated file at assets/css/main.css and loading it via Hugo's asset pipeline. That way the HTML template stays clean and you can split the CSS into logical files if needed later.
-
-You said: Here is the existing file.
-
-<!doctype html> <html lang="{{ si
-
-pasted
-
-Here is the existing file. Please reorganize without altering the format for now.
-
-10:10 PM
-Claude responded: The only functional change worth noting: the two @media blocks that were interleaved with .
-
-Determined CSS reorganization strategy while preserving existing formatting
-Determined CSS reorganization strategy while preserving existing formatting
-The only functional change worth noting: the two @media blocks that were interleaved with .img-strike and .img-thumb are now consolidated at the end under "Responsive overrides", grouped by breakpoint from largest to smallest. Everything else is purely reordered — no rules were added, removed, or altered.
-
-I also left out .betns-table since it wasn't in the file you pasted — that must still be in the newer version you shared earlier. You'd slot it in as section 7 (Tables) just before the responsive overrides.
-
-
-Baseof
-Code · HTML 
-
-Want to be notified when Claude responds?
-
-
-
-Claude is AI and can make mistakes. Please double-check responses.
-Baseof · HTML
-Copy
-
 <!doctype html>
 <html lang="{{ site.LanguageCode | default "en" }}">
 <head>
@@ -614,22 +13,22 @@ Copy
       --bs-primary: #5533ff;
       --bs-primary-rgb: 85, 51, 255;
     }
- 
+
     /* 2. Layout */
     body { display: flex; flex-direction: column; min-height: 100vh; }
     main { flex: 1 0 auto; }
- 
+
     /* 3. Header */
     .site-header .navbar-brand { font-weight: 600; display: flex; align-items: center; gap: 0.75rem; color: #fff; }
     .site-header .navbar-brand img { height: 44px; width: auto; border-radius: 4px; }
     .site-header .navbar-brand:hover, .site-header .navbar-brand:focus { color: #fff; }
     .site-header .dropdown-menu .dropdown-item.active,
     .site-header .dropdown-menu .dropdown-item:active { background-color: var(--bs-primary); }
- 
+
     /* 4. Footer */
     footer { background: #f1f3f5; }
     footer .footer-logo { max-height: 80px; width: auto; }
- 
+
     /* 5. Content area */
     .featured-image { max-height: 360px; object-fit: cover; width: 100%; border-radius: 0.5rem; margin-bottom: 1.5rem; }
     /* Content images: cap at column width by default; inline width/height
@@ -639,11 +38,11 @@ Copy
     .content figure img { display: block; max-width: 100%; height: auto; }
     .content .wp-block-image { display: inline-block; }
     .content .table { display: table; width: auto; }
- 
+
     /* 6. Image render-hook variants */
     .img-banner { margin: 0 0 1.5rem; }
     .img-banner img { width: 100%; max-height: 260px; object-fit: cover; border-radius: 0.5rem; }
- 
+
     .img-strike {
       float: right; max-width: 50%; height: 350px;
       border-radius: 20px; overflow: hidden;
@@ -651,23 +50,31 @@ Copy
       margin: 0 0 1.5rem 1.5rem;
     }
     .img-strike img { width: 100%; height: 100%; object-fit: cover; }
- 
+
     .img-icon {
       display: inline-block; vertical-align: middle;
       max-height: 48px; width: auto; margin-right: 0.5rem;
     }
- 
+
     .img-thumb {
       float: left; max-width: 220px; margin: 0 1rem 0.75rem 0;
       border-radius: 0.375rem;
     }
     .img-thumb img { border-radius: 0.375rem; }
- 
+
     .img-center { text-align: center; }
     .img-center img { margin: 0 auto; max-width: 100%; }
     .img-center figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: #6c757d; }
- 
-    /* 7. Responsive overrides */
+
+    /* 7. Tables */
+    .betns-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 1em; }
+    .betns-table thead th { text-align: left; padding: 12px; background-color: #e8f5e9; color: #2E7D32; border-bottom: 2px solid #c8e6c9; }
+    .betns-table td { padding: 10px 12px; border-bottom: 1px solid #ddd; }
+    .betns-table tbody tr:hover { background-color: #f6fbf7; }
+    .betns-table a { text-decoration: none; }
+    .betns-table a:hover { text-decoration: underline; }
+
+    /* 8. Responsive overrides */
     @media (max-width: 768px) {
       .img-strike { float: none; margin: 1em auto; max-width: 100%; height: 220px; }
     }

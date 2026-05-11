@@ -1,5 +1,6 @@
 +++
 title = "Policies"
+type = "policies"
 slug = "policies-2"
 date = "2017-10-01T12:32:30+00:00"
 lastmod = "2025-11-26T20:56:58+00:00"

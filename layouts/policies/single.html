@@ -7,7 +7,7 @@
     {{ .Content }}
     <ul>
       {{ range resources.Match "policies/**/*" }}
-        <li><a href="{{ .RelPermalink }}">{{ .Name }}</a></li>
+        <li><a href="{{ .RelPermalink }}">{{ path.Base .Name }}</a></li>
       {{ end }}
     </ul>
   </div>

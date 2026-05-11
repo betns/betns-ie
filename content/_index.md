@@ -45,7 +45,3 @@ At Blessington Educate Together National School, we believe in education beyond 
 [Pre-enrol](/school-policies/) today and experience a school where every child is valued, respected, and empowered.
 
 [Contact us](/contact-us/) to learn more about our admissions process and be part of our vibrant school community!
-
-<!-- TODO add to YouTube
-<video controls="" playsinline="" preload="metadata" style="max-width:100%;"><source src="/uploads/videos/virtual-open-day.mov" type="video/quicktime"/></video> 
--->

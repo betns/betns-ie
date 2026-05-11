@@ -1,0 +1,6 @@
+{{ define "main" }}
+  <p>{{ .Content }}</p>
+  {{ range resources.Match "policies/**/*" }}
+    <a href="{{ .RelPermalink }}">{{ .Name }}</a><br>
+  {{ end }}
+{{ end }}

@@ -10,7 +10,3 @@ aliases = ["/wp/policies-2/"]
 These policies are in place in Blessington Educate Together National School, please read them carefully.
 
 If you have any questions about them feel free to [contact us.](/contact-us/ "Contact Us")
-
-{{ range resources.Match "policies/**/*" }}
-  <a href="{{ .RelPermalink }}">{{ .Name }}</a>
-{{ end }}

@@ -22,11 +22,12 @@ aliases = ["/wp/contact-us/"]
 
 </figure>
 
-##
-
 <iframe
+  class="my-4"
   src="https://maps.google.com/maps?q=Blessington+Educate+Together,+Blessington,+Ireland&z=14&output=embed"
   width="425" height="350" style="border:0" loading="lazy"
   referrerpolicy="no-referrer-when-downgrade"
   title="Map: BETNS, Red Lane, Blessington">
 </iframe>
+
+[Find us on Facebook](https://www.facebook.com/BlessingtonET)

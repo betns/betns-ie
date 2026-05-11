@@ -1,6 +1,15 @@
 {{ define "main" }}
-  <p>{{ .Content }}</p>
-  {{ range resources.Match "policies/**/*" }}
-    <a href="{{ .RelPermalink }}">{{ .Name }}</a><br>
-  {{ end }}
+<article class="mx-auto" style="max-width: 820px;">
+  <header class="mb-4">
+    <h1>{{ .Title }}</h1>
+  </header>
+  <div class="content">
+    {{ .Content }}
+    <ul>
+      {{ range resources.Match "policies/**/*" }}
+        <li><a href="{{ .RelPermalink }}">{{ .Name }}</a></li>
+      {{ end }}
+    </ul>
+  </div>
+</article>
 {{ end }}

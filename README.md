@@ -1,108 +1,312 @@
-# Blessington Educate Together — Hugo site
+# Blessington Educate Together website
 
-A static rebuild of <https://www.educatetogether-blessington.ie/wp/>, generated
-from the WordPress REST export under `../blessington-et-export/` and intended
-for hosting on GitHub Pages.
+This repository contains the files for the Blessington Educate Together school website.
 
-## Quickstart
+The site was rebuilt from the former WordPress website as a static Hugo site and is published using GitHub Pages. Most ordinary updates can be made directly in GitHub by editing text files or uploading files such as PDFs and images.
 
-```bash
-hugo server -D
+For technical notes about Hugo, deployment, and the original WordPress conversion, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## What can be updated here
+
+This README is intended for simple website updates, such as:
+
+- updating text on an existing page
+- changing teacher names, class names, or school information
+- adding or replacing a PDF, such as the school calendar
+- adding a picture to a page
+- adding a simple new page
+
+For larger changes, layout changes, menu changes, or technical problems, ask for help.
+
+---
+
+## The most important folders and files
+
+| Folder or file | What it is for |
+|---|---|
+| `content/` | Website pages and page text |
+| `static/uploads/documents/` | PDFs and other downloadable documents |
+| `static/uploads/images/` | Images added to pages |
+| `CONTRIBUTING.md` | Technical notes for developers |
+
+Most routine updates only need `content/`, `static/uploads/documents/`, and `static/uploads/images/`.
+
+---
+
+## How changes go live
+
+Changes can be made directly on the `main` branch.
+
+When a change is saved to the `main` branch, GitHub automatically rebuilds and publishes the website.
+
+After saving a change, the update may not appear on the live site immediately. GitHub needs to finish rebuilding the site first.
+
+If the site does not update or something looks wrong, ask for help.
+
+---
+
+## Editing in github.dev
+
+For a more comfortable editing view, open the repository at:
+
+```text
+https://github.dev/betns/betns-ie
 ```
 
-Visit <http://localhost:1313/>. Hugo extended ≥ 0.128 is recommended (the
-GitHub Actions workflow pins 0.139.4).
+This opens the website files in a browser-based editor.
 
-## Editing content
+This can be easier than editing one file at a time on GitHub, especially when updating page text or checking several files. Save changes by committing them to the `main` branch.
 
-Pages live under `content/` as page bundles (`index.md` per page, `_index.md`
-for sections). Front matter is TOML; the most useful fields:
+For uploading PDFs or images, it may still be easiest to use the normal GitHub website.
 
-| field            | purpose                                                 |
-|------------------|---------------------------------------------------------|
-| `title`          | shown in the page header and `<title>`                  |
-| `weight`         | sort order in section listings and dropdowns            |
-| `aliases`        | redirects from old WP URLs (`/wp/<slug>/`)              |
-| `featured_image` | path under `static/uploads/`; rendered above the body    |
+---
 
-Top-level navigation is configured under `[[menu.main]]` in `hugo.toml`.
+## Editing text on an existing page
 
-### Image layout — staying in markdown
+Website pages are stored in the `content/` folder.
 
-Editors don't need raw HTML for common image treatments. Append a `#variant`
-fragment to the image URL and the render hook at
-`layouts/_default/_markup/render-image.html` picks the right wrapper + class
-(defined in `layouts/_default/baseof.html`):
+Most pages have their own folder containing an `index.md` file, for example:
 
-| Markdown                                  | Effect                                          |
-|-------------------------------------------|-------------------------------------------------|
-| `![alt](src)`                             | plain inline image, capped at column width      |
-| `![alt](src#banner)`                      | full-width hero across the column (max 260 px tall) |
-| `![alt](src#strike)`                      | right-floated 350 px hero (homepage style)      |
-| `![alt](src#icon)`                        | inline icon (sits next to text in lists/prose)  |
-| `![alt](src#thumb)`                       | left-floated 220 px thumb that text wraps around |
-| `![alt](src#center "Optional caption")`   | block-centred image; title becomes a caption    |
-
-The `#fragment` is invisible to browsers — the image still resolves correctly
-even if the render hook is absent. The converter auto-tags obvious cases
-(images inside `<figure class="strike-image">` → `#strike`, images at the
-start of a list item → `#icon`, images whose alt or filename contains
-"banner" → `#banner`); editors can override or add fragments as needed.
-
-When an image carries pixel dimensions in the WP source (`style="width:535px"`,
-`width="464"`, etc.), the converter passes it through as raw HTML rather than
-losing the sizing — the variant system above is for layout-class hints, not
-for pixel-perfect overrides.
-
-## Deploying to GitHub Pages
-
-1. Push this directory to a GitHub repository.
-2. In the repo settings → **Pages**, set the source to **GitHub Actions**.
-3. Push to `main`. The `Deploy Hugo site to Pages` workflow at
-   `.github/workflows/hugo.yml` will build and publish.
-
-The workflow injects the right `baseURL` from the configured Pages URL, so
-the placeholder `https://example.com/` in `hugo.toml` only matters for local
-preview.
-
-## Regenerating from the WP export
-
-If the WordPress source is re-exported into `../blessington-et-export/raw/`,
-rerun the converter and recopy media:
-
-```bash
-/app/python/source_code/.venv/bin/python3 scripts/convert.py
-cp -r ../blessington-et-export/raw/media/wp-content/uploads/. static/uploads/
-mkdir -p static/uploads/videos
-cp ../blessington-et-export/raw/media/7TAJJOHq/virtual-open-day.mov static/uploads/videos/
+```text
+content/contact-us/index.md
+content/about-us/index.md
 ```
 
-The converter:
+To edit page text:
 
-- walks `pages.json` and emits Markdown bundles under `content/`
-- strips WP block comments, `<style>`/`<script>` tags, and Photon resize queries
-- rewrites `https://...ie/wp/wp-content/uploads/` → `/uploads/`
-- rewrites `https://...ie/wp/<slug>/` → `/<slug>/`
-- resolves `?page_id=N` permalinks via the page id → slug map
-- emits TOML front matter with `aliases` set to the original WP path
+1. Open the relevant page folder inside `content/`.
+2. Open `index.md`.
+3. Click the edit button in GitHub.
+4. Edit the text in the file.
+5. Save or commit the change to the `main` branch.
 
-## What's stubbed / known gaps
+Many pages begin with a small settings section at the top, for example:
 
-- **Contact form.** The original page used a Jetpack contact form; this build
-  shows a `mailto:` block instead. Plug in Formspree (or similar) by editing
-  `content/contact-us/index.md` and adding a small form snippet.
-- **Missing media.** 41 originals 404'd during the WP export; see
-  `../blessington-et-export/raw/media_404s.txt`. References to those files
-  remain in the markdown and will render as broken image/file links.
-- **Featured images.** Set per-page via `featured_image` in front matter.
-  None are seeded automatically by the converter.
-- **`baseURL`.** Left as `https://example.com/` so the local preview works
-  without configuration. The Pages workflow overrides this at build time.
+```toml
++++
+title = "Contact Us"
+weight = 10
++++
+```
 
-## Source of truth
+Try not to change this top section unless you are changing the page title.
 
-- WordPress export: `../blessington-et-export/`
-- REST JSON: `../blessington-et-export/raw/json/pages.json`
-- Rendered HTML mirror (used to recover the nav menu):
-  `../blessington-et-export/raw/html/wp/index.html`
-- Conversion plan: `../blessington-et-export/CONVERSION-PLAN.md`
+The normal page text appears below that section.
+
+---
+
+## Basic formatting
+
+The site uses Markdown for most page content.
+
+### Paragraphs
+
+Leave a blank line between paragraphs.
+
+```markdown
+This is one paragraph.
+
+This is another paragraph.
+```
+
+### Headings
+
+```markdown
+## This is a heading
+```
+
+### Bullet lists
+
+```markdown
+- First item
+- Second item
+- Third item
+```
+
+### Links
+
+```markdown
+[Visit Educate Together](https://www.educatetogether.ie/)
+```
+
+### Links to files on this site
+
+```markdown
+[Download the school calendar](/uploads/documents/school-calendar-2026-2027.pdf)
+```
+
+---
+
+## Adding or updating a PDF
+
+PDFs and other downloadable files should go in:
+
+```text
+static/uploads/documents/
+```
+
+Use simple file names with lowercase letters and hyphens, for example:
+
+```text
+school-calendar-2026-2027.pdf
+booklist-first-class.pdf
+policy-admissions.pdf
+```
+
+Avoid spaces in file names.
+
+### Updating the school calendar PDF
+
+The school calendar is a good example of a document that may need to be updated every year.
+
+To update it:
+
+1. Upload the new calendar PDF to `static/uploads/documents/`.
+2. Use a clear file name, for example:
+
+```text
+school-calendar-2026-2027.pdf
+```
+
+3. Open the page where the school calendar is linked.
+4. Update the link so that it points to the new PDF:
+
+```markdown
+[Download the school calendar](/uploads/documents/school-calendar-2026-2027.pdf)
+```
+
+5. Save or commit the change to the `main` branch.
+
+### Replacing an existing PDF
+
+There are two simple options.
+
+Option 1: upload the new PDF using the same file name as the old PDF.
+
+This keeps the existing website link working.
+
+Option 2: upload the new PDF with a new file name, then update the link on the relevant page.
+
+For annual documents, a new file name is usually clearer, for example:
+
+```text
+school-calendar-2026-2027.pdf
+```
+
+---
+
+## Adding a picture to a page
+
+Images should go in:
+
+```text
+static/uploads/images/
+```
+
+Use simple file names with lowercase letters and hyphens, for example:
+
+```text
+junior-infants-classroom.jpg
+school-garden.jpg
+active-schools-week.jpg
+```
+
+Avoid spaces in file names.
+
+To add an image to a page, upload the image and then add this to the page text:
+
+```markdown
+![Children working in the school garden](/uploads/images/school-garden.jpg)
+```
+
+The text inside the square brackets describes the image. This is useful for accessibility and for people using screen readers.
+
+### Useful image layouts
+
+The site supports a few simple image layout options.
+
+| Markdown | Effect |
+|---|---|
+| `![Description](/uploads/images/photo.jpg)` | Normal image |
+| `![Description](/uploads/images/photo.jpg#center)` | Centred image |
+| `![Description](/uploads/images/photo.jpg#thumb)` | Smaller image with text wrapping around it |
+| `![Description](/uploads/images/photo.jpg#banner)` | Wide banner-style image |
+
+Example:
+
+```markdown
+![School garden](/uploads/images/school-garden.jpg#center)
+```
+
+With a caption:
+
+```markdown
+![School garden](/uploads/images/school-garden.jpg#center "Our school garden")
+```
+
+---
+
+## Adding a simple new page
+
+To add a simple new page:
+
+1. Go to the `content/` folder.
+2. Create a new folder with a simple lowercase name, for example:
+
+```text
+content/school-calendar/
+```
+
+3. Inside that folder, create a file called:
+
+```text
+index.md
+```
+
+4. Add this starter content:
+
+```markdown
++++
+title = "School Calendar"
+weight = 50
++++
+
+Add the page text here.
+```
+
+The page will be available at:
+
+```text
+/school-calendar/
+```
+
+For example, a page in:
+
+```text
+content/school-calendar/index.md
+```
+
+will appear on the website as:
+
+```text
+/school-calendar/
+```
+
+A new page is not automatically added to the main menu. Ask for help if the new page should appear in the website menu.
+
+---
+
+## When to ask for help
+
+Ask for help before making changes to:
+
+- the website design or layout
+- the main navigation menu
+- the contact form
+- technical files such as `.github/`, `layouts/`, `scripts/`, `hugo.toml`, or `CONTRIBUTING.md`
+- anything involving the old WordPress site
+- anything that causes the site build to fail
+
+For routine text edits, PDF updates, images, and small new pages, the steps above should be enough.
